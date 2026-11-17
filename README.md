@@ -74,6 +74,37 @@ flowchart TB
 
 Quem confere não deve ser quem executou. Os pedidos prontos estão em [`modelos/REGRAS_PARA_A_IA.md`](modelos/REGRAS_PARA_A_IA.md).
 
+## Teste em 2 minutos (dados fictícios)
+
+Antes de coletar qualquer coisa, veja o método funcionando com o exemplo inventado que vem no repositório (`exemplos/exemplo.ndjson`: dois perfis fictícios, 10 dias, um dia sem post de propósito, um carrossel, curtidas ocultas e vídeos com e sem reproduções).
+
+```
+python3 scripts/importar_ndjson.py exemplos/exemplo.ndjson --perfis exemplos/perfis_exemplo.csv --inicio 2026-03-01 --fim 2026-03-10
+python3 scripts/verificar_base.py saida/coleta_<data>_<hora>/posts_grupo_a.csv --inicio 2026-03-01 --fim 2026-03-10
+python3 scripts/gerar_planilha.py saida/coleta_<data>_<hora> --inicio 2026-03-01 --fim 2026-03-10   # precisa de: pip install openpyxl
+```
+
+Saída esperada, resumida:
+- importar: `grupo_a: 15 posts ... vídeos com reproduções: 3 de 4` e `grupo_b: 11 posts`; 1 item inválido (registro sem `code`, como acontece no arquivo real).
+- verificar (grupo_a): `Curtidas vazias: 1`, `Posts por formato: imagem=10, reels=4, carrossel=1`, `Dias sem post (1 de 10): 2026-03-06`.
+- Rode o importar de novo e passe `--anterior saida/coleta_<primeira>/posts_grupo_a.csv` ao verificar: `0 posts novos | 0 que estavam antes e não estão agora | 0 reproduções recuperadas`.
+- planilha: `saida/planilha_<data>_<hora>.xlsx` com as abas `leia_me, resumo, grupo_a, grupo_b, dias_sem_post`.
+
+## Entradas e saídas
+
+| Arquivo | Quem gera | O que contém | Pode editar? |
+|---|---|---|---|
+| `perfis.csv` | Você | grupo, @ do perfil, aliases | Sim |
+| `dados_brutos/*.ndjson` | Zeeschuimer (download) | Tudo que o Instagram mandou ao navegador | **Não.** Só leitura |
+| `dados_brutos/seguidores.csv` | `anotar_seguidores.py` | Uma linha por dia e perfil | Não. Só acrescenta |
+| `saida/coleta_<data>_<hora>/posts_<grupo>.csv` | `importar_ndjson.py` | Um post por linha (ver `docs/dicionario_colunas.md`) | **Não.** Cada coleta é uma pasta nova |
+| `saida/coleta_<data>_<hora>/resumo.txt` | `importar_ndjson.py` | Contagens e período por grupo | Não |
+| `midia/<grupo>/*.mp4, *.jpg` e `midia/registro_download.csv` | `baixar_midia.py` | Vídeos e imagens dos posts | Não |
+| `saida/transcricoes_<grupo>.csv` | `transcrever.py` | shortcode, arquivo, texto | Não. Só acrescenta |
+| `saida/planilha_<data>_<hora>.xlsx` | `gerar_planilha.py` | Tudo junto, com dicionário | Não. Gere outra |
+| `documentos/dias_sem_post.csv` | Você (ou a IA, e você confere) | Classificação de cada dia sem post | Sim |
+| `documentos/decisoes.md`, `documentos/relatorio_<data>.md` | Você e a IA | Período, perfis, totais, lacunas | Sim |
+
 ## Comece por aqui
 
 1. Leia o [`PASSO_A_PASSO.md`](PASSO_A_PASSO.md). É uma lista numerada; cada passo diz o que fazer e como saber que deu certo.
@@ -93,6 +124,8 @@ Quem confere não deve ser quem executou. Os pedidos prontos estão em [`modelos
 | `scripts/transcrever.py` | Transcreve o áudio dos vídeos, no seu computador (opcional) |
 | `scripts/gerar_planilha.py` | Junta tudo numa planilha `.xlsx` nova, com dicionário de colunas |
 | `modelos/perfis.csv` | Modelo da lista de perfis a coletar |
+| `exemplos/` | Dados fictícios para o teste em 2 minutos |
+| `CITATION.cff` | Como citar |
 | `modelos/REGRAS_PARA_A_IA.md` | Regras do projeto; vira `CLAUDE.md` ou `AGENTS.md` na sua pasta |
 | `docs/dicionario_colunas.md` | O que significa cada coluna da planilha |
 | `docs/o_que_tentamos_antes.md` | Caminhos que falharam ou custaram caro, para você não repetir |
@@ -103,6 +136,22 @@ Quem confere não deve ser quem executou. Os pedidos prontos estão em [`modelos
 **Traz:** data e hora do post, formato (imagem, carrossel, vídeo, reels), legenda, hashtags, menções, coautores, curtidas, número de comentários, visualizações e reproduções de vídeo, se é parceria paga, se está fixado.
 
 **Não traz:** texto dos comentários, número de seguidores (anote à mão, todo dia), stories (somem em 24 h). Reproduções de vídeo só aparecem na aba **Reels** do perfil, por isso o método rola duas abas.
+
+## O que foi testado
+
+| Script | Situação |
+|---|---|
+| `importar_ndjson.py`, `verificar_base.py`, `gerar_planilha.py`, `anotar_seguidores.py` | Testados com dados reais da pesquisa original e com o exemplo fictício |
+| `rolar_firefox.py` | Mac: usado na pesquisa original, na versão anterior deste script. Windows e Linux: **não testado** (só sintaxe). Se der errado, role à mão (passo 4) |
+| `baixar_midia.py`, `transcrever.py` | Escritos a partir dos scripts da pesquisa original, mas **não executados** nesta versão (só sintaxe e `--help`) |
+
+## Como citar
+
+```
+Pina, Caio. (2026). Posts públicos do Instagram para pesquisa: método de coleta com Firefox + IA (versão 1.0) [software]. https://github.com/caioazevedooliveira-ops/coleta-instagram-pesquisa
+```
+
+Os metadados estão em [`CITATION.cff`](CITATION.cff) (o GitHub mostra o botão "Cite this repository").
 
 ## Licença e créditos
 

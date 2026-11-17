@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "Se usar este método, cite assim."
+type: software
+title: "Posts públicos do Instagram para pesquisa: método de coleta com Firefox + IA"
+version: "1.0"
+date-released: "2026-11-16"
+license: MIT
+repository-code: "https://github.com/caioazevedooliveira-ops/coleta-instagram-pesquisa"
+authors:
+  - family-names: "Pina"
+    given-names: "Caio"
+keywords:
+  - instagram
+  - web scraping
+  - digital methods
+  - research methods

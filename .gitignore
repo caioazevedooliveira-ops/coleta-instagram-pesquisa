@@ -5,6 +5,8 @@ duplicados/
 *.ndjson
 *.csv
 !modelos/perfis.csv
+!exemplos/perfis_exemplo.csv
+!exemplos/exemplo.ndjson
 *.xlsx
 *.mp4
 *.jpg
