@@ -18,6 +18,8 @@ Nasceu em um projeto de iniciação científica sobre perfis políticos. Aqui va
 
 Você abre o perfil no Firefox, um script rola a página como uma pessoa lendo, a extensão guarda o que o Instagram manda para o navegador, e outro script transforma isso em planilha. Cada coleta vira um arquivo novo com data e hora; nada é apagado nem sobrescrito.
 
+> **Importante:** o Zeeschuimer não acessa o Instagram por conta própria. Ele guarda uma cópia do que o Instagram já envia ao seu navegador enquanto você navega; o script de rolagem só faz a página carregar mais posts. Entenda em [`docs/como_o_zeeschuimer_funciona.md`](docs/como_o_zeeschuimer_funciona.md).
+
 ### Do que entra ao que sai
 
 ```mermaid
@@ -128,6 +130,7 @@ Saída esperada, resumida:
 | `CITATION.cff` | Como citar |
 | `modelos/REGRAS_PARA_A_IA.md` | Regras do projeto; vira `CLAUDE.md` ou `AGENTS.md` na sua pasta |
 | `docs/dicionario_colunas.md` | O que significa cada coluna da planilha |
+| `docs/como_o_zeeschuimer_funciona.md` | Como a extensão captura os dados e por que o script só rola a página |
 | `docs/o_que_tentamos_antes.md` | Caminhos que falharam ou custaram caro, para você não repetir |
 | `docs/etica_e_limites.md` | O que não coletar, o que declarar, o que ainda depende do seu orientador |
 
