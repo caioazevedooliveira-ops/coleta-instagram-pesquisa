@@ -1,0 +1,22 @@
+# Dados da pesquisa nunca sobem para o repositório
+dados_brutos/
+saida/
+duplicados/
+*.ndjson
+*.csv
+!modelos/perfis.csv
+*.xlsx
+*.mp4
+*.jpg
+*.png
+
+# Sessões, logins e segredos
+*session*
+*cookie*
+*token*
+.env
+config_local.*
+
+# Sistema
+.DS_Store
+__pycache__/
